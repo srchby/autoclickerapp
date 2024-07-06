@@ -25,20 +25,22 @@ class App(customtkinter.CTk):
         # create sidebar frame with widgets
         self.sidebar_frame = customtkinter.CTkFrame(self, width=140)
         self.sidebar_frame.grid(row=0, column=0, rowspan=4,pady=12,padx=10)
-
+        
+        # sidebar widgets
+        # logo
         self.logo = customtkinter.CTkLabel(
             self.sidebar_frame, 
             text="srch's Autoclicker",
             font=("Segoe UI", 32))
         self.logo.grid(row=0,column=0,pady=12,padx=10)
-        
+        # start button
         self.start_button = customtkinter.CTkButton(
             self.sidebar_frame,
             text="Start",
             font=('Segoe UI', 16)
         )
         self.start_button.grid(row=1,column=0,pady=12,padx=10)
-        
+        # stop button
         self.stop_button = customtkinter.CTkButton(
             self.sidebar_frame,
             text="Stop",
@@ -46,7 +48,16 @@ class App(customtkinter.CTk):
             state='disabled'
         )
         self.stop_button.grid(row=2,column=0,pady=12,padx=10)
+        # author
+        self.author_label = customtkinter.CTkLabel(
+            self.sidebar_frame,
+            text='Made by srchby',
+            font=('Segoe UI', 12)
+        )
+        self.author_label.grid(row=4,column=0,padx=12,pady=10)
         
+        # frame widgets
+        # minutes
         self.min_label = customtkinter.CTkLabel(
             self,
             text="Minutes",
@@ -63,7 +74,7 @@ class App(customtkinter.CTk):
             textvariable=self.min_click_var
         )
         self.min_click.grid(row=1,column=1,padx=12,pady=10,sticky='nw')
-        
+        # seconds box
         self.sec_label = customtkinter.CTkLabel(
             self,
             text="Seconds",
@@ -80,7 +91,7 @@ class App(customtkinter.CTk):
             textvariable=self.sec_click_var
         )
         self.sec_click.grid(row=1,column=2,padx=12,pady=10,sticky='nw')
-        
+        # milliseconds box
         self.mil_label = customtkinter.CTkLabel(
             self,
             text="Milliseconds",
@@ -97,21 +108,21 @@ class App(customtkinter.CTk):
             textvariable=self.mil_click_var
         )
         self.mil_click.grid(row=1,column=3,padx=12,pady=10,sticky='nw')
-        
-        mousemenu_label = customtkinter.CTkLabel(
+        # mouse buttons box
+        self.mousemenu_label = customtkinter.CTkLabel(
             self,
             text='Mouse button',
             font=('Segoe UI', 12)
         )
-        mousemenu_label.grid(row=2,column=1,padx=12,pady=10)
-        mousemenu_var = customtkinter.StringVar(value="Left")
-        mousemenu = customtkinter.CTkComboBox(
+        self.mousemenu_label.grid(row=2,column=1,padx=12,pady=10)
+        self.mousemenu_var = customtkinter.StringVar(value="Left")
+        self.mousemenu = customtkinter.CTkComboBox(
             self,
             font=("Segoe UI", 12),
-            variable=mousemenu_var,
+            variable=self.mousemenu_var,
             values=["Left","Right"]
         )
-        mousemenu.grid(row=3,column=1,padx=12,pady=10)
+        self.mousemenu.grid(row=3,column=1,padx=12,pady=10)
 
 if __name__ == "__main__":
     app = App()
