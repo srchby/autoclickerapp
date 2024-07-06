@@ -98,33 +98,21 @@ class App(customtkinter.CTk):
         )
         self.mil_click.grid(row=1,column=3,padx=12,pady=10,sticky='nw')
         
-        
+        mousemenu_label = customtkinter.CTkLabel(
+            self,
+            text='Mouse button',
+            font=('Segoe UI', 12)
+        )
+        mousemenu_label.grid(row=2,column=1,padx=12,pady=10)
+        mousemenu_var = customtkinter.StringVar(value="Left")
+        mousemenu = customtkinter.CTkComboBox(
+            self,
+            font=("Segoe UI", 12),
+            variable=mousemenu_var,
+            values=["Left","Right"]
+        )
+        mousemenu.grid(row=3,column=1,padx=12,pady=10)
 
 if __name__ == "__main__":
     app = App()
     app.mainloop()
-
-# buttonmenu_txt= customtkinter.CTkLabel(
-#     master=frame,
-#     text='Button Menu',
-#     font=('Segoe UI', 16)
-# )
-# buttonmenu_txt.grid(row=0,column=1,pady=12,padx=10)
-# buttonmenu_var = customtkinter.StringVar(value='Left')
-# buttonmenu = customtkinter.CTkComboBox(
-#     master=frame,
-#     font=('Segoe UI', 16),
-#     variable=buttonmenu_var,
-#     values=['Left','Middle','Right']
-# )
-# clickinterval_var = customtkinter.StringVar(
-#     master=frame,
-#     value=str(0.01)
-# )
-# clickinterval = customtkinter.CTkEntry(
-#     master=frame,
-#     font=('Segoe UI', 16),
-#     textvariable=clickinterval_var
-# )
-# clickinterval.grid(row=3,column=1,pady=12,padx=10)
-# root.mainloop()
