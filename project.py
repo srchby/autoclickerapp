@@ -145,7 +145,7 @@ class App(customtkinter.CTk):
         self.lis2 = keyboard.Listener(on_press=self.on_press1)
         self.lis2.start()
         
-    def buttonmenu_event(self, choice5):
+    def mousemenu_event(self, choice5):
         global button1
         self.choice5 = choice5
 
@@ -230,23 +230,17 @@ class App(customtkinter.CTk):
         
         lis1 = Listener(on_press=self.on_press)
         lis1.start()
-        
-        min_click = float(self.min_click.get())
-        sec_click = float(self.sec_click.get())
-        mil_click = float(self.mil_click.get())
-
-        self.clickinterval = min_click + sec_click + mil_click
-        
-        self.interval = float(self.clickinterval.get())
+        # correct the decimal house
+        self.interval = float(self.min_click.get()) * 60.0 + float(self.sec_click.get()) + float(self.mil_click.get()) * 0.001
         if repeattype == 1:
             while self.auto1:
                 if not self.pause:
                     if self.mousemenu.get() == "Left":
                         pydirectinput.click(button="left")
-                        pydirectinput.PAUSE = self.interval()
+                        pydirectinput.PAUSE = self.interval
                     elif self.mousemenu.get() == "Right":
                         pydirectinput.click(button="right")
-                        pydirectinput.PAUSE = self.interval()
+                        pydirectinput.PAUSE = self.interval
                     else:
                         pydirectinput.press(keys=self.mousemenu.get().lower())
                         pydirectinput.PAUSE = self.interval
