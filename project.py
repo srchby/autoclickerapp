@@ -12,7 +12,22 @@ import threading
 customtkinter.set_appearance_mode("System")  # Modes: "System" (standard), "Dark", "Light"
 customtkinter.set_default_color_theme("blue")  # Themes: "blue" (standard), "green", "dark-blue"
 
+auto_key = Key.f6
+
+button1 = "Left"
+clicktype = "Single"
+repeattype = 1
+
 class App(customtkinter.CTk):
+    auto = False
+    auto1 = False
+    
+    global resource
+    def resource(relative_path):
+        base_path = getattr(sys, "_MEIPASS", os.path.dirname(
+            os.path.abspath(__file__)))
+        return os.path.join(base_path, relative_path)
+    
     def __init__(self):
         super().__init__()
         
@@ -34,20 +49,20 @@ class App(customtkinter.CTk):
             font=("Segoe UI", 32))
         self.logo.grid(row=0,column=0,pady=12,padx=10)
         # start button
-        self.start_button = customtkinter.CTkButton(
+        self.start_on_button = customtkinter.CTkButton(
             self.sidebar_frame,
-            text="Start",
+            text="Start (F6)",
             font=('Segoe UI', 16)
         )
-        self.start_button.grid(row=1,column=0,pady=12,padx=10)
+        self.start_on_button.grid(row=1,column=0,pady=12,padx=10)
         # stop button
-        self.stop_button = customtkinter.CTkButton(
+        self.stop_off_button = customtkinter.CTkButton(
             self.sidebar_frame,
-            text="Stop",
+            text="Stop (F6)",
             font=('Segoe UI', 16),
             state='disabled'
         )
-        self.stop_button.grid(row=2,column=0,pady=12,padx=10)
+        self.stop_off_button.grid(row=2,column=0,pady=12,padx=10)
         # author
         self.author_label = customtkinter.CTkLabel(
             self.sidebar_frame,
@@ -120,9 +135,144 @@ class App(customtkinter.CTk):
             self,
             font=("Segoe UI", 12),
             variable=self.mousemenu_var,
+            command=self.mousemenu_event,
             values=["Left","Right"]
         )
         self.mousemenu.grid(row=3,column=1,padx=12,pady=10)
+        
+        self.mousemenu.bind("<Return>", lambda e: self.custombutton())
+        
+        self.lis2 = keyboard.Listener(on_press=self.on_press1)
+        self.lis2.start()
+        
+    def buttonmenu_event(self, choice5):
+        global button1
+        self.choice5 = choice5
+
+        if self.choice5 == "Left":
+            button1 = "Left"
+        elif self.choice5 == "Right":
+            button1 = "Right"
+            
+    def custombutton(self):
+        global button1
+        button1 = self.mousemenu_var.get()
+        self.frame.focus_set()
+        
+    def start_button(self):
+        if (True and not self.pause):
+            self.lis2.stop()
+            self.pause = False
+
+            self.autoclc = threading.Thread(target=self.autoClick)
+            self.autoclc.start()
+
+            self.mousemenu.configure(state="normal")
+            self.mousemenu.configure(state="disabled")
+            self.start_on_button.configure(state="disabled")
+            self.stop_off_button.configure(state="enabled")
+        else:
+            if not self.pause:
+                self.lis2.stop()
+                self.pause = False
+
+                self.autohol = threading.Thread(target=self.autoHold)
+                self.autohol.start()
+
+                self.mousemenu.configure(state="normal")
+                self.mousemenu.configure(state="disabled")
+                self.start_on_button.configure(state="disabled")
+                self.stop_button.configure(state="enabled")    
+        
+    def on_press1(self, key):
+        if not self.auto1 and key == auto_key:
+            self.pause = False
+            self.auto1 = True
+            self.auto = False
+            self.lis2.stop()
+            self.start_button()
+            
+    def on_press(self, key):
+        if self.auto1 and key == auto_key:
+            self.pause = True
+            self.auto1 = False
+            self.stop_button()
+            self.lis2 = keyboard.Listener(on_press=self.on_press1)
+            self.lis2.start()
+            
+    def autoHold(self):
+        self.auto = True
+        self.auto1 = False
+        self.pause = False
+        
+        lis = Listener(on_press=self.on_press)
+        lis.start()
+        
+        while self.auto:
+            if not self.pause:
+                if button1 == "Left":
+                    pydirectinput.mouseDown(button="left")
+                elif button1 == "Right":
+                    pydirectinput.mouseDown(button="right")
+                else:
+                    pydirectinput.keyDown(keys=self.mousemenu.get().lower())
+                    pydirectinput.PAUSE = self.interval
+                    
+            if self.pause:
+                self.autohol.join()
+                break
+        lis.stop()
+        
+    def autoClick(self):
+        self.auto = False
+        self.auto1 = True
+        self.pause = False
+        
+        lis1 = Listener(on_press=self.on_press)
+        lis1.start()
+        
+        min_click = float(self.min_click.get())
+        sec_click = float(self.sec_click.get())
+        mil_click = float(self.mil_click.get())
+
+        self.clickinterval = min_click + sec_click + mil_click
+        
+        self.interval = float(self.clickinterval.get())
+        if repeattype == 1:
+            while self.auto1:
+                if not self.pause:
+                    if self.mousemenu.get() == "Left":
+                        pydirectinput.click(button="left")
+                        pydirectinput.PAUSE = self.interval()
+                    elif self.mousemenu.get() == "Right":
+                        pydirectinput.click(button="right")
+                        pydirectinput.PAUSE = self.interval()
+                    else:
+                        pydirectinput.press(keys=self.mousemenu.get().lower())
+                        pydirectinput.PAUSE = self.interval
+                if self.pause:
+                    break
+    def stop_button(self):
+        self.pause = True
+        
+        if button1 == "Left":
+            self.auto1 = False
+            pydirectinput.mouseUp(button='left')
+        elif button1 == "Right":
+            self.auto1 = False
+            pydirectinput.mouseUp(button="right")
+        
+        self.mousemenu.configure(state="normal")
+        self.start_on_button.configure(state="enabled")
+        self.stop_off_button.configure(state="disabled")
+    
+    def on_close(self, event=0):
+        self.destroy()
+        
+    def start(self):
+        self.mainloop()
+    
+
 
 if __name__ == "__main__":
     app = App()
