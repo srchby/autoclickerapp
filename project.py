@@ -31,11 +31,11 @@ class App(customtkinter.CTk):
     def __init__(self):
         super().__init__()
         
-        self.iconbitmap(r'C:\Users\srchby\Documents\Code\autoclickerapp\link.ico')
-
         # configure window
         self.title("srch's Autoclicker")
-        self.geometry(f"{1024}x{512}")
+        self.geometry(f"{768}x{256}")
+        
+        self.wm_iconbitmap("link.ico")
 
         # create sidebar frame with widgets
         self.sidebar_frame = customtkinter.CTkFrame(self, width=140)
@@ -46,7 +46,7 @@ class App(customtkinter.CTk):
         self.logo = customtkinter.CTkLabel(
             self.sidebar_frame, 
             text="srch's Autoclicker",
-            font=("Segoe UI", 32))
+            font=("Segoe UI", 24))
         self.logo.grid(row=0,column=0,pady=12,padx=10)
         # start button
         self.start_on_button = customtkinter.CTkButton(
